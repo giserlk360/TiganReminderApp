@@ -82,6 +82,9 @@ class TiganReminderApp:
         self.interval = tk.IntVar(value=60)
         self.running = False
         self.thread = None
+        self.countdown_time = tk.IntVar(value=60)  # 默认倒计时1分钟（60秒）
+        self.countdown_window = None
+        self.countdown_running = False
 
         self.messages = self.load_messages()
 
@@ -89,6 +92,10 @@ class TiganReminderApp:
         tk.Label(master, text="提醒间隔（分钟）").pack(pady=5)
         self.interval_entry = tk.Entry(master, textvariable=self.interval, width=10, justify='center')
         self.interval_entry.pack()
+
+        tk.Label(master, text="提肛时长（秒）").pack(pady=5)
+        self.countdown_entry = tk.Entry(master, textvariable=self.countdown_time, width=10, justify='center')
+        self.countdown_entry.pack()
 
         self.status_label = tk.Label(master, text="状态：未启动")
         self.status_label.pack(pady=5)
@@ -267,7 +274,79 @@ class TiganReminderApp:
         msg = random.choice(valid_messages)
 
         # 使用 after 确保在主线程中调用 messagebox
-        self.master.after(0, lambda m=msg: messagebox.showinfo("提肛提醒！", m, parent=self.master)) # 指定 parent
+        self.master.after(0, lambda m=msg: self.show_reminder_with_countdown(m))
+    
+    def show_reminder_with_countdown(self, msg):
+        """显示带有倒计时的提醒框"""
+        if self.countdown_window and self.countdown_window.winfo_exists():
+            self.countdown_window.destroy()  # 确保没有多个倒计时窗口
+        
+        self.countdown_window = tk.Toplevel(self.master)
+        self.countdown_window.title("提肛提醒！")
+        self.countdown_window.geometry("300x200")
+        self.countdown_running = True
+        
+        try:
+            # 设置窗口图标（如果有）
+            if os.path.exists(WINDOW_ICON_FILE):
+                self.countdown_window.iconbitmap(WINDOW_ICON_FILE)
+        except Exception as e:
+            print(f"设置倒计时窗口图标时出错: {e}")
+        
+        # 提示信息
+        message_label = tk.Label(self.countdown_window, text=msg, wraplength=280, font=("", 12))
+        message_label.pack(pady=15)
+        
+        # 获取当前设置的倒计时时间
+        try:
+            countdown_seconds = int(self.countdown_time.get())
+            if countdown_seconds <= 0:
+                countdown_seconds = 60  # 默认为60秒
+        except:
+            countdown_seconds = 60  # 默认为60秒
+            
+        # 倒计时显示
+        self.countdown_label = tk.Label(self.countdown_window, text=f"倒计时: {countdown_seconds} 秒", font=("", 14))
+        self.countdown_label.pack(pady=10)
+        
+        # 完成按钮
+        self.complete_btn = tk.Button(self.countdown_window, text="完成", command=self.close_countdown, state=tk.DISABLED)
+        self.complete_btn.pack(pady=10)
+        
+        # 开始倒计时
+        self.start_countdown(countdown_seconds)
+        
+        # 窗口居中显示
+        self.countdown_window.update_idletasks()
+        width = self.countdown_window.winfo_width()
+        height = self.countdown_window.winfo_height()
+        x = (self.countdown_window.winfo_screenwidth() // 2) - (width // 2)
+        y = (self.countdown_window.winfo_screenheight() // 2) - (height // 2)
+        self.countdown_window.geometry('{}x{}+{}+{}'.format(width, height, x, y))
+        
+        # 窗口焦点和置顶
+        self.countdown_window.focus_force()
+        self.countdown_window.lift()
+        self.countdown_window.attributes('-topmost', True)
+        
+    def start_countdown(self, seconds):
+        """开始倒计时"""
+        if not self.countdown_running or not self.countdown_window or not self.countdown_window.winfo_exists():
+            return
+            
+        if seconds > 0:
+            self.countdown_label.config(text=f"倒计时: {seconds} 秒")
+            self.countdown_window.after(1000, lambda: self.start_countdown(seconds-1))
+        else:
+            self.countdown_label.config(text="完成！可以继续工作了")
+            self.complete_btn.config(state=tk.NORMAL)
+            self.countdown_running = False
+    
+    def close_countdown(self):
+        """关闭倒计时窗口"""
+        self.countdown_running = False
+        if self.countdown_window and self.countdown_window.winfo_exists():
+            self.countdown_window.destroy()
 
 
     def hide_window(self):
