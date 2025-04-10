@@ -5,22 +5,25 @@ import time
 import json
 import os
 import random
-# 尝试导入 playsound，如果失败则提供替代方案或警告
+# 只保留pygame音频库
+import sys
+import platform
+
+# 尝试导入 pygame 用于播放声音
 try:
-    from playsound import playsound
+    import pygame
+    pygame_available = True
+    pygame.mixer.init()
+    print("成功导入 pygame")
 except ImportError:
-    print("警告: playsound 模块未安装或无法加载。将无法播放提示音。")
-    def playsound(sound_path, block=False): # 定义一个空的 playsound 函数
-        pass # 什么也不做
+    pygame_available = False
+    print("警告: pygame 模块未安装或无法加载")
 except Exception as e:
-    print(f"加载 playsound 时发生未知错误: {e}")
-    def playsound(sound_path, block=False):
-        pass
+    pygame_available = False
+    print(f"初始化 pygame 时发生错误: {e}")
 
 from PIL import Image
 import pystray
-import sys
-import platform # 导入 platform
 
 # 函数：获取资源文件的绝对路径
 def resource_path(relative_path):
@@ -28,6 +31,9 @@ def resource_path(relative_path):
     try:
         # PyInstaller 创建临时文件夹并将路径存储在 _MEIPASS
         base_path = sys._MEIPASS
+        full_path = os.path.join(base_path, relative_path)
+        print(f"打包环境资源路径: {full_path}, 文件存在: {os.path.exists(full_path)}")
+        return full_path
     except Exception:
         # 如果不是通过 PyInstaller 运行，则使用脚本所在的目录
         base_path = os.path.abspath(".")
@@ -35,8 +41,9 @@ def resource_path(relative_path):
         if platform.system() == "Darwin" and ".app" in base_path:
              base_path = os.path.join(base_path, "Resources")
 
-
-    return os.path.join(base_path, relative_path)
+        full_path = os.path.join(base_path, relative_path)
+        print(f"开发环境资源路径: {full_path}, 文件存在: {os.path.exists(full_path)}")
+        return full_path
 
 # 使用 resource_path 函数来定义文件路径
 CONFIG_FILE = resource_path("messages.json")
@@ -56,6 +63,38 @@ DEFAULT_MESSAGES = [
     "来，跟我一起：吸～ 提～ 呼～ ☯️",
     "提升战斗力，从这一提开始 🚀"
 ]
+
+# 简化后的播放声音函数，只使用pygame
+def play_sound(sound_file):
+    """使用pygame播放声音文件"""
+    # 打印声音文件信息
+    print(f"尝试播放声音文件: {sound_file}")
+    print(f"文件存在检查: {os.path.exists(sound_file)}")
+    
+    if not os.path.exists(sound_file):
+        print(f"警告: 声音文件 '{sound_file}' 未找到")
+        return False
+    
+    # 使用 pygame 播放声音
+    if pygame_available:
+        try:
+            def play_with_pygame():
+                try:
+                    pygame.mixer.music.load(sound_file)
+                    pygame.mixer.music.play()
+                    print("使用 pygame 播放声音成功")
+                except Exception as e:
+                    print(f"pygame 播放声音出错: {e}")
+            
+            sound_thread = threading.Thread(target=play_with_pygame, daemon=True)
+            sound_thread.start()
+            return True
+        except Exception as e:
+            print(f"尝试使用 pygame 时出错: {e}")
+    
+    print("警告: 无法播放声音，pygame不可用")
+    return False
+
 
 class TiganReminderApp:
     def __init__(self, master):
@@ -260,12 +299,11 @@ class TiganReminderApp:
 
     def show_reminder(self):
         try:
-            if os.path.exists(SOUND_FILE):
-                # 使用线程播放声音，避免阻塞主线程，特别是 block=False 可能不完全可靠时
-                sound_thread = threading.Thread(target=playsound, args=(SOUND_FILE,), daemon=True)
-                sound_thread.start()
+            # 使用简化的 play_sound 函数
+            if pygame_available:
+                play_sound(SOUND_FILE)
             else:
-                print(f"警告: 声音文件 '{SOUND_FILE}' 未找到。")
+                print(f"警告: 无法播放声音，pygame不可用")
         except Exception as e:
             print(f"播放声音 '{SOUND_FILE}' 时出错: {e}")
 

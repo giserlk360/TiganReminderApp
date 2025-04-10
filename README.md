@@ -30,7 +30,7 @@
 * ✅ **自定义提肛时长:** 支持自定义提肛时长，并在提醒窗口上有提肛倒计时提示
 * ✅ **自定义提示语:** 支持添加/编辑自己的提示语，并保存到本地 `messages.json` 文件
 * ✅ **系统托盘图标:** 使用 `pystray` 和 `Pillow` 实现系统托盘图标，支持显示/隐藏窗口及退出程序
-* ✅ **提示音:** 使用 `playsound` 播放提示音 (`ding.mp3`)
+* ✅ **提示音:** 使用 `pygame` 播放提示音 (`ding.mp3`)
 * ✅ **窗口图标:** 为应用程序窗口设置单独的图标 (`icon.ico`)
 * **打包改进:** 优化了打包配置，确保资源文件能被正确包含和访问
 
@@ -52,16 +52,16 @@
 * **依赖库:**
   * `pystray`: 用于创建系统托盘图标
   * `Pillow`: `pystray` 的依赖，用于处理图像文件
-  * `playsound`: 用于播放提示音
+  * `pygame`: 用于播放提示音
 
 你可以使用 pip 安装这些库：
 ```bash
-pip install pystray Pillow playsound
+pip install pystray Pillow pygame
 ```
 
 *注意:* 如果在国内环境安装速度慢，可以考虑使用镜像源，例如：
 ```bash
-pip install pystray Pillow playsound -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install pystray Pillow pygame -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
 ## 🏃‍♂️ 如何运行
@@ -90,7 +90,7 @@ pip install pystray Pillow playsound -i https://pypi.tuna.tsinghua.edu.cn/simple
    ```
 
    * `--onefile`: 生成单个可执行文件
-   * `--windowed`: 运行时不显示命令行控制台
+   * `--windowed`: 运行时不显示命令行控制台 `--console`：显示控制台
    * `--add-data "文件;."`: 将资源文件添加到包中。注意 Windows 使用分号 `;`，macOS/Linux 使用冒号 `:`
    * `--icon="icon.ico"`: 设置生成 `.exe` 文件的图标
 
