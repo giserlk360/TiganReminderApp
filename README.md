@@ -4,7 +4,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
-![Version](https://img.shields.io/badge/Version-1.0.2-orange.svg)
+![Version](https://img.shields.io/badge/Version-1.0.3-orange.svg)
 
 一个简单的桌面应用程序，旨在提醒长时间坐着的用户进行提肛运动。
 
@@ -20,10 +20,22 @@
 - 🔄 **随机显示**：每次提醒时随机选择一条提示语
 - 🔲 **最小化运行**：支持将窗口最小化到系统托盘
 - 🖥️ **托盘图标**：使用系统托盘图标，支持显示/隐藏窗口及退出程序
+- 🎨 **美观界面**：使用Sun Valley ttk主题，支持深色/浅色模式切换
+- 📊 **进度显示**：倒计时窗口添加进度条，直观显示提肛进度
 
 ## 🚀 版本历史
 
-### v1.0.2 (当前版本 - Pro 版)
+### v1.0.3 (当前版本 - 美化版)
+
+**新增功能:**
+
+* ✅ **Sun Valley主题:** 引入Sun Valley ttk主题，提供现代化的界面外观
+* ✅ **主题切换:** 支持深色/浅色主题切换，适应不同使用环境
+* ✅ **界面优化:** 重新设计界面布局，使用ttk.Frame组织控件，提升用户体验
+* ✅ **进度条:** 在倒计时窗口添加进度条，直观显示提肛进度
+* ✅ **托盘菜单优化:** 扩展托盘菜单，添加主题切换和编辑提示语选项
+
+### v1.0.2 (Pro 版)
 
 **新增功能:**
 
@@ -53,15 +65,16 @@
   * `pystray`: 用于创建系统托盘图标
   * `Pillow`: `pystray` 的依赖，用于处理图像文件
   * `pygame`: 用于播放提示音
+  * `sv-ttk`: 用于应用Sun Valley ttk主题
 
 你可以使用 pip 安装这些库：
 ```bash
-pip install pystray Pillow pygame
+pip install pystray Pillow pygame sv-ttk
 ```
 
 *注意:* 如果在国内环境安装速度慢，可以考虑使用镜像源，例如：
 ```bash
-pip install pystray Pillow pygame -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install pystray Pillow pygame sv-ttk -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
 ## 🏃‍♂️ 如何运行
@@ -71,7 +84,7 @@ pip install pystray Pillow pygame -i https://pypi.tuna.tsinghua.edu.cn/simple
 3. 在命令行中，切换到该目录
 4. 运行主程序脚本：
    ```bash
-   python tigan_reminder_v1.0.2.py
+   python tigan_reminder_v1.0.3.py
    ```
 
 ## 📦 打包为 .exe (Windows)
@@ -86,7 +99,7 @@ pip install pystray Pillow pygame -i https://pypi.tuna.tsinghua.edu.cn/simple
 2. **执行打包命令:**
    在包含所有文件（`.py`, `.png`, `.ico`, `.mp3`, `.json`）的目录下，打开命令行并运行：
    ```bash
-   pyinstaller --noconfirm --onefile --windowed --add-data "icon.png;." --add-data "icon.ico;." --add-data "ding.mp3;." --add-data "messages.json;." --icon="icon.ico" tigan_reminder_v1.0.2.py
+   pyinstaller --noconfirm --onefile --windowed --add-data "icon.png;." --add-data "icon.ico;." --add-data "ding.mp3;." --add-data "messages.json;." --icon="icon.ico" tigan_reminder_v1.0.3.py
    ```
 
    * `--onefile`: 生成单个可执行文件
@@ -94,7 +107,7 @@ pip install pystray Pillow pygame -i https://pypi.tuna.tsinghua.edu.cn/simple
    * `--add-data "文件;."`: 将资源文件添加到包中。注意 Windows 使用分号 `;`，macOS/Linux 使用冒号 `:`
    * `--icon="icon.ico"`: 设置生成 `.exe` 文件的图标
 
-3. **查找结果:** 打包成功后，可在生成的 `dist` 目录下找到 `tigan_reminder_v1.0.2.exe` 文件
+3. **查找结果:** 打包成功后，可在生成的 `dist` 目录下找到 `tigan_reminder_v1.0.3.exe` 文件
 
 ## 🔄 设置开机自启 (Windows 手动方式)
 
@@ -117,5 +130,3 @@ pip install pystray Pillow pygame -i https://pypi.tuna.tsinghua.edu.cn/simple
 <div align="center">
 感谢使用提肛提醒器小助手！希望它能帮助你保持健康的工作习惯。
 </div>
-
-
