@@ -4,7 +4,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
-![Version](https://img.shields.io/badge/Version-1.0.3-orange.svg)
+![Version](https://img.shields.io/badge/Version-1.0.4-orange.svg)
 
 一个简单的桌面应用程序，旨在提醒长时间坐着的用户进行提肛运动。
 
@@ -25,7 +25,16 @@
 
 ## 🚀 版本历史
 
-### v1.0.3 (当前版本 - 美化版)
+### v1.0.4 (当前版本 - 增强版)
+
+**新增功能:**
+
+* ✅ **自动启动功能**: 支持设置程序启动时自动开始提醒功能
+* ✅ **自动最小化**: 支持设置程序启动时自动最小化到系统托盘
+* ✅ **配置持久化**: 用户设置（自动启动、自动最小化、主题等）会自动保存并在下次启动时加载
+* ✅ **体验优化**: 改进了配置保存机制，实时保存用户设置变更
+
+### v1.0.3 (美化版)
 
 **新增功能:**
 
