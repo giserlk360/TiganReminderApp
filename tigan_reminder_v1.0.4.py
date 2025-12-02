@@ -673,6 +673,8 @@ class TiganReminderApp:
             self.progress_var.set(0)  # 进度条归零
             self.complete_btn.config(state=tk.NORMAL)
             self.countdown_running = False
+            # 倒计时结束后5秒自动关闭窗口
+            self.countdown_window.after(5000, self.close_countdown)
     
     def close_countdown(self):
         """关闭倒计时窗口"""
