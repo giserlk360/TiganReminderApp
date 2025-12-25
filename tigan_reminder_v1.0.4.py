@@ -808,12 +808,16 @@ class TiganReminderApp:
         print(f"主题已切换为: {self.current_theme} 并已保存")
         
     def center_window(self, window):
-        """使窗口居中显示"""
+        """使窗口显示在屏幕右下角"""
         window.update_idletasks()
         width = window.winfo_width()
         height = window.winfo_height()
-        x = (window.winfo_screenwidth() // 2) - (width // 2)
-        y = (window.winfo_screenheight() // 2) - (height // 2)
+        screen_width = window.winfo_screenwidth()
+        screen_height = window.winfo_screenheight()
+        # 设置窗口位置为右下角，留出一些边距
+        margin = 120
+        x = screen_width - width - margin
+        y = screen_height - height - margin
         window.geometry('{}x{}+{}+{}'.format(width, height, x, y))
 
 
